@@ -143,6 +143,37 @@ public class DBData extends HttpServlet {
 				}
 			}
 		}
+		//if the needed operation is to get the last events.
+		else if(req.getParameter("operation").equals("getLastEvents")) {
+			JSONObject jObj = dbOperation.getLastEvents();
+			if (jObj != null) {
+				PrintWriter pw = resp.getWriter();
+				String answer = new String(jObj.toString().getBytes("UTF-8"), "ISO-8859-1");
+				pw.write(answer);
+				pw.print(answer);
+			}
+		}
+		//if the needed operation is to get the admin statistics.
+		else if(req.getParameter("operation").equals("getAdminStatistics")) {
+			JSONObject jObj = dbOperation.getAdminStatistics();
+			if (jObj != null) {
+				PrintWriter pw = resp.getWriter();
+				String answer = new String(jObj.toString().getBytes("UTF-8"), "ISO-8859-1");
+				pw.write(answer);
+				pw.print(answer);
+			}
+		}
+		//if the needed operation is to get the user name.
+		else if(req.getParameter("operation").equals("getUserName")) {
+			String email = req.getParameter("email");
+			JSONObject jObj = dbOperation.getUserName(email);
+			if (jObj != null) {
+				PrintWriter pw = resp.getWriter();
+				String answer = new String(jObj.toString().getBytes("UTF-8"), "ISO-8859-1");
+				pw.write(answer);
+				pw.print(answer);
+			}
+		}
 	}
 
 }
