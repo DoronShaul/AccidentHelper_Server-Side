@@ -47,7 +47,6 @@ public class LoginImp {
 			ps.setString(1, supplier.getEmail());
 			ResultSet rs = ps.executeQuery();
 			if(rs.next()) {
-				
 				String hashedPass = rs.getString(3);
 				if(BCrypt.checkpw(supplier.getPassword(), hashedPass)) {
 					return true;

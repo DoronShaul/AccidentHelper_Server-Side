@@ -27,6 +27,9 @@ public class DBOperation {
 	String getLastDayEventsQuery = "SELECT COUNT(*) FROM mydatabase.accident_event WHERE start_time BETWEEN CURDATE() AND CURDATE()";
 	String getLastMonthEventsQuery = "SELECT COUNT(*) FROM mydatabase.accident_event WHERE start_time BETWEEN CURDATE()-30 AND CURDATE()";
 	String getUserNameQuery = "SELECT * FROM mydatabase.user WHERE email=?";
+	String getUserLastEventsQuery = "SELECT * FROM mydatabase.accident_event WHERE user_email=?";
+	String getSupplierNameQuery = "SELECT * FROM mydatabase.supplier WHERE email=?";
+
 
 	/**
 	 * this method gets all the suppliers on the waiting list, and returns a json
@@ -266,6 +269,48 @@ public class DBOperation {
 			JSONObject jObj = new JSONObject();
 			if (rs.next()) {
 				jObj.put("userName", rs.getNString(2));
+			}
+			return jObj;
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		return null;
+
+	}
+	
+	public JSONObject getUserLastEvents(String email) {
+		try {
+			Class.forName(DRIVER);
+			java.sql.Connection connection = DriverManager.getConnection(URL, USER, PASSWORD);
+			PreparedStatement ps = connection.prepareStatement(getUserLastEventsQuery);
+			ps.setString(1, email);
+			ResultSet rs = ps.executeQuery();
+			JSONObject jObj = new JSONObject();
+			int num = 0;
+			rs.afterLast();
+			while (rs.previous() && num < 3) {
+				jObj.put("id" + num, rs.getInt(1));
+				jObj.put("time" + num, rs.getString(12));
+				num++;
+			}
+			return jObj;
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		return null;
+
+	}
+	
+	public JSONObject getSupplierName(String email) {
+		try {
+			Class.forName(DRIVER);
+			java.sql.Connection connection = DriverManager.getConnection(URL, USER, PASSWORD);
+			PreparedStatement ps = connection.prepareStatement(getSupplierNameQuery);
+			ps.setString(1, email);
+			ResultSet rs = ps.executeQuery();
+			JSONObject jObj = new JSONObject();
+			if (rs.next()) {
+				jObj.put("supplierName", rs.getNString(2));
 			}
 			return jObj;
 		} catch (Exception e) {

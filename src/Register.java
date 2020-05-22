@@ -76,13 +76,13 @@ public class Register extends HttpServlet {
 			String contact2Name = req.getParameter("contact2_name");
 			String contact2Num = req.getParameter("contact2_num");
 			String contact2Role = req.getParameter("contact2_role");
-			String hashedPassword = BCrypt.hashpw(password, BCrypt.gensalt());
+			//String hashedPassword = BCrypt.hashpw(password, BCrypt.gensalt());
 
 			Supplier newSupplier = new Supplier();
 			newSupplier.setEmail(email);
 			newSupplier.setFullName(fullName);
 			newSupplier.setAddress(address);
-			newSupplier.setPassword(hashedPassword);
+			newSupplier.setPassword(password);
 			newSupplier.setCapability(capability);
 			newSupplier.setOpenTime(openTime);
 			newSupplier.setCloseTime(closeTime);

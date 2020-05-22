@@ -77,7 +77,8 @@ public class Login extends HttpServlet {
 		
 		else {
 			try {
-				loginStatus.put("Login", "Failed");
+				
+				loginStatus.put("type", "failed");
 				PrintWriter pw = resp.getWriter();
 				pw.write(loginStatus.toString());
 				pw.print(loginStatus.toString());
