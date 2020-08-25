@@ -11,6 +11,9 @@ import org.json.JSONObject;
 
 import javafx.util.Pair;
 
+
+
+
 public class DBData extends HttpServlet {
 	DBOperation dbOperation = new DBOperation();
 
@@ -60,14 +63,22 @@ public class DBData extends HttpServlet {
 			String isPolice = req.getParameter("police");
 			String isMda = req.getParameter("mda");
 			String isFire = req.getParameter("fire");
-			// String isContact = req.getParameter("contact");
+			String isContact = req.getParameter("contacts");
+			String isInjured = req.getParameter("injured");
+			String isRoadBlocked = req.getParameter("roadBlocked");
+			String severity = req.getParameter("severity");
+			String tow = req.getParameter("tow");
 
 			AccidentEvent accidentEvent = new AccidentEvent();
 			accidentEvent.setEmail(email);
-			// accidentEvent.setContacts(Integer.parseInt(isContact));
+			accidentEvent.setContacts(Integer.parseInt(isContact));
 			accidentEvent.setPolice(Integer.parseInt(isPolice));
 			accidentEvent.setMda(Integer.parseInt(isMda));
 			accidentEvent.setFire(Integer.parseInt(isFire));
+			accidentEvent.setBlockedRoad(Integer.parseInt(isRoadBlocked));
+			accidentEvent.setSeverity(Integer.parseInt(severity));
+			accidentEvent.setInjured(Integer.parseInt(isInjured));
+			accidentEvent.setTow(Integer.parseInt(tow));
 
 			Pair<Integer, Integer> pair = dbOperation.openAccidentEvent(accidentEvent);
 
@@ -106,10 +117,7 @@ public class DBData extends HttpServlet {
 			String additionalDetails = req.getParameter("additional");
 
 			AccidentEvent accidentEvent = new AccidentEvent();
-			accidentEvent.setAdditionalDetails(additionalDetails);
-			accidentEvent.setInsurance(Integer.parseInt(isInsurance));
 			accidentEvent.setTow(Integer.parseInt(isTow));
-			accidentEvent.setInvolvedDetails(involvedDetails);
 
 			if (dbOperation.updateAccidentEvent(id, accidentEvent) > 0) {
 				System.out.println("update event succeed");

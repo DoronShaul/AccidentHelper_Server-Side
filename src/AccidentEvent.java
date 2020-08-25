@@ -1,11 +1,9 @@
 /**
  * this class represents an accident event.
- * @author doron
- *
  */
 public class AccidentEvent {
-	private int police, mda, fire, contacts, insurance, tow;
-	private String email, involvedDetails, additionalDetails;
+	private int police, mda, fire, contacts, severity, tow, injured, blockedRoad;
+	private String email;
 	public int getPolice() {
 		return police;
 	}
@@ -30,11 +28,23 @@ public class AccidentEvent {
 	public void setContacts(int contacts) {
 		this.contacts = contacts;
 	}
-	public int getInsurance() {
-		return insurance;
+	public int getSeverity() {
+		return severity;
 	}
-	public void setInsurance(int insurance) {
-		this.insurance = insurance;
+	public void setSeverity(int severity) {
+		this.severity = severity;
+	}
+	public int getInjured() {
+		return injured;
+	}
+	public void setInjured(int injured) {
+		this.injured = injured;
+	}
+	public int getBlockedRoad() {
+		return blockedRoad;
+	}
+	public void setBlockedRoad(int blockedRoad) {
+		this.blockedRoad = blockedRoad;
 	}
 	public int getTow() {
 		return tow;
@@ -47,18 +57,6 @@ public class AccidentEvent {
 	}
 	public void setEmail(String email) {
 		this.email = email;
-	}
-	public String getInvolvedDetails() {
-		return involvedDetails;
-	}
-	public void setInvolvedDetails(String involvedDetails) {
-		this.involvedDetails = involvedDetails;
-	}
-	public String getAdditionalDetails() {
-		return additionalDetails;
-	}
-	public void setAdditionalDetails(String additionalDeails) {
-		this.additionalDetails = additionalDeails;
 	}
 	
 	

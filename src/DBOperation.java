@@ -7,6 +7,7 @@ import org.json.JSONObject;
 
 import javafx.util.Pair;
 
+
 public class DBOperation {
 	String DRIVER = "com.mysql.cj.jdbc.Driver";
 	String URL = "jdbc:mysql://localhost:3306/mydatabase?useUnicode=true&useJDBCCompliantTimezoneShift=true&useLegacyDatetimeCode=false&serverTimezone=UTC";
@@ -15,8 +16,8 @@ public class DBOperation {
 	String getWaitingListQuery = "SELECT * FROM mydatabase.waiting_supplier";
 	String getSupplierListQuery = "SELECT * FROM mydatabase.supplier";
 	String removeSupplierFromWaitingListQuery = "DELETE FROM mydatabase.waiting_supplier WHERE email=?";
-	String addsAccidentEventQuery = "INSERT into mydatabase.accident_event (user_email, involved_details, additional_details,"
-			+ " call_police ,call_mda, call_fire, call_contact, call_insurance, call_tow, is_active) VALUE (?,?,?,?,?,?,?,?,?,?)";
+	String addsAccidentEventQuery = "INSERT into mydatabase.accident_event (user_email, call_police ,call_mda, call_fire, call_contact, "+
+			"call_tow, injured, road_blocked, tow_arrived, is_active) VALUE (?,?,?,?,?,?,?,?,?,?)";
 	String lastIdQuery = "SELECT LAST_INSERT_ID()";
 	String updateEventQuery = "UPDATE mydatabase.accident_event SET involved_details=?, additional_details=?, call_insurance=?, call_tow=? WHERE event_id=?";
 	String closeEventQuery = "UPDATE mydatabase.accident_event SET is_active=?, end_time=current_timestamp() WHERE event_id=?";
@@ -24,8 +25,8 @@ public class DBOperation {
 	String getTotalEventsQuery = "SELECT COUNT(*) FROM mydatabase.accident_event";
 	String getActiveUsersQuery = "SELECT COUNT(*) FROM mydatabase.user";
 	String getTotalSuppliersQuery = "SELECT COUNT(*) FROM mydatabase.supplier";
-	String getLastDayEventsQuery = "SELECT COUNT(*) FROM mydatabase.accident_event WHERE start_time BETWEEN CURDATE() AND CURDATE()";
-	String getLastMonthEventsQuery = "SELECT COUNT(*) FROM mydatabase.accident_event WHERE start_time BETWEEN CURDATE()-30 AND CURDATE()";
+	String getLastDayEventsQuery = "SELECT COUNT(*) FROM mydatabase.accident_event WHERE start_time BETWEEN CURDATE() AND CURDATE()+1";
+	String getLastMonthEventsQuery = "SELECT COUNT(*) FROM mydatabase.accident_event WHERE start_time BETWEEN CURDATE()-30 AND CURDATE()+1";
 	String getUserNameQuery = "SELECT * FROM mydatabase.user WHERE email=?";
 	String getUserLastEventsQuery = "SELECT * FROM mydatabase.accident_event WHERE user_email=?";
 	String getSupplierNameQuery = "SELECT * FROM mydatabase.supplier WHERE email=?";
@@ -136,14 +137,14 @@ public class DBOperation {
 			PreparedStatement ps = connection.prepareStatement(addsAccidentEventQuery);
 			PreparedStatement ps1 = connection.prepareStatement(lastIdQuery);
 			ps.setString(1, accidentEvent.getEmail());
-			ps.setString(2, accidentEvent.getInvolvedDetails());
-			ps.setString(3, accidentEvent.getAdditionalDetails());
-			ps.setString(4, "" + accidentEvent.getPolice());
-			ps.setString(5, "" + accidentEvent.getMda());
-			ps.setString(6, "" + accidentEvent.getFire());
-			ps.setString(7, "" + accidentEvent.getContacts());
-			ps.setString(8, "" + accidentEvent.getInsurance());
-			ps.setString(9, "" + accidentEvent.getTow());
+			ps.setString(2, "" + accidentEvent.getPolice());
+			ps.setString(3, "" + accidentEvent.getMda());
+			ps.setString(4, "" + accidentEvent.getFire());
+			ps.setString(5, "" + accidentEvent.getContacts());
+			ps.setString(6, "" + accidentEvent.getTow());
+			ps.setString(7, "" + accidentEvent.getInjured());
+			ps.setString(8, "" + accidentEvent.getBlockedRoad());
+			ps.setString(9, "" + 0);
 			ps.setString(10, "" + 1);
 			answer = ps.executeUpdate();
 			ResultSet rs = ps1.executeQuery();
@@ -164,9 +165,6 @@ public class DBOperation {
 			Class.forName(DRIVER);
 			java.sql.Connection connection = DriverManager.getConnection(URL, USER, PASSWORD);
 			PreparedStatement ps = connection.prepareStatement(updateEventQuery);
-			ps.setString(1, accidentEvent.getInvolvedDetails());
-			ps.setString(2, accidentEvent.getAdditionalDetails());
-			ps.setString(3, "" + accidentEvent.getInsurance());
 			ps.setString(4, "" + accidentEvent.getTow());
 			ps.setString(5, "" + id);
 			answer = ps.executeUpdate();
