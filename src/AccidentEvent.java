@@ -3,7 +3,13 @@
  */
 public class AccidentEvent {
 	private int police, mda, fire, contacts, severity, tow, injured, blockedRoad;
-	private String email;
+	private String email, wazeLink;
+	public String getWazeLink() {
+		return wazeLink;
+	}
+	public void setWazeLink(String wazeLink) {
+		this.wazeLink = wazeLink;
+	}
 	public int getPolice() {
 		return police;
 	}

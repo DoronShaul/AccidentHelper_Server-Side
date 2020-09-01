@@ -68,9 +68,11 @@ public class DBData extends HttpServlet {
 			String isRoadBlocked = req.getParameter("roadBlocked");
 			String severity = req.getParameter("severity");
 			String tow = req.getParameter("tow");
+			String wazeLink = req.getParameter("waze");
 
 			AccidentEvent accidentEvent = new AccidentEvent();
 			accidentEvent.setEmail(email);
+			accidentEvent.setWazeLink(wazeLink);
 			accidentEvent.setContacts(Integer.parseInt(isContact));
 			accidentEvent.setPolice(Integer.parseInt(isPolice));
 			accidentEvent.setMda(Integer.parseInt(isMda));
@@ -197,6 +199,16 @@ public class DBData extends HttpServlet {
 		else if (req.getParameter("operation").equals("getSupplierName")) {
 			String email = req.getParameter("email");
 			JSONObject jObj = dbOperation.getSupplierName(email);
+			if (jObj != null) {
+				PrintWriter pw = resp.getWriter();
+				String answer = new String(jObj.toString().getBytes("UTF-8"), "ISO-8859-1");
+				pw.write(answer);
+				pw.print(answer);
+			}
+		}
+		
+		else if (req.getParameter("operation").equals("getActiveEventsForSuppliers")) {
+			JSONObject jObj = dbOperation.getActiveEventsForSuppliers();
 			if (jObj != null) {
 				PrintWriter pw = resp.getWriter();
 				String answer = new String(jObj.toString().getBytes("UTF-8"), "ISO-8859-1");
