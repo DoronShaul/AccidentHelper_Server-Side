@@ -111,17 +111,10 @@ public class DBData extends HttpServlet {
 			}
 		}
 		// if the needed operation is to update the accident event.
-		else if (req.getParameter("operation").equals("updateAccidentEvent")) {
-			String id = "" + req.getParameter("id");
-			String isInsurance = req.getParameter("insurance");
-			String isTow = req.getParameter("tow");
-			String involvedDetails = req.getParameter("involved");
-			String additionalDetails = req.getParameter("additional");
+		else if (req.getParameter("operation").equals("updateEventStatus")) {
+			String id = "" + req.getParameter("event_id");
 
-			AccidentEvent accidentEvent = new AccidentEvent();
-			accidentEvent.setTow(Integer.parseInt(isTow));
-
-			if (dbOperation.updateAccidentEvent(id, accidentEvent) > 0) {
+			if (dbOperation.updateAccidentEvent(id) > 0) {
 				System.out.println("update event succeed");
 				JSONObject status = new JSONObject();
 				try {

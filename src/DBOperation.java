@@ -19,7 +19,7 @@ public class DBOperation {
 	String addsAccidentEventQuery = "INSERT into mydatabase.accident_event (user_email, call_police ,call_mda, call_fire, call_contact, "+
 			"call_tow, injured, road_blocked, tow_arrived, is_active, waze_link) VALUE (?,?,?,?,?,?,?,?,?,?,?)";
 	String lastIdQuery = "SELECT LAST_INSERT_ID()";
-	String updateEventQuery = "UPDATE mydatabase.accident_event SET involved_details=?, additional_details=?, call_insurance=?, call_tow=? WHERE event_id=?";
+	String updateEventQuery = "UPDATE mydatabase.accident_event SET tow_arrived=1 WHERE event_id=?";
 	String closeEventQuery = "UPDATE mydatabase.accident_event SET is_active=?, end_time=current_timestamp() WHERE event_id=?";
 	String getLastEventsQuery = "SELECT * FROM mydatabase.accident_event";
 	String getTotalEventsQuery = "SELECT COUNT(*) FROM mydatabase.accident_event";
@@ -161,14 +161,13 @@ public class DBOperation {
 		return pair;
 	}
 
-	public int updateAccidentEvent(String id, AccidentEvent accidentEvent) {
+	public int updateAccidentEvent(String id) {
 		int answer = 0;
 		try {
 			Class.forName(DRIVER);
 			java.sql.Connection connection = DriverManager.getConnection(URL, USER, PASSWORD);
 			PreparedStatement ps = connection.prepareStatement(updateEventQuery);
-			ps.setString(4, "" + accidentEvent.getTow());
-			ps.setString(5, "" + id);
+			ps.setString(1, "" + id);
 			answer = ps.executeUpdate();
 		} catch (Exception e) {
 			e.printStackTrace();
