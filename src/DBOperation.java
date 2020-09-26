@@ -20,7 +20,7 @@ public class DBOperation {
 			"call_tow, injured, road_blocked, tow_arrived, is_active, waze_link) VALUE (?,?,?,?,?,?,?,?,?,?,?)";
 	String lastIdQuery = "SELECT LAST_INSERT_ID()";
 	String updateEventQuery = "UPDATE mydatabase.accident_event SET tow_arrived=1 WHERE event_id=?";
-	String closeEventQuery = "UPDATE mydatabase.accident_event SET is_active=?, end_time=current_timestamp() WHERE event_id=?";
+	String closeEventQuery = "UPDATE mydatabase.accident_event SET is_active=0, end_time=current_timestamp() WHERE event_id=?";
 	String getLastEventsQuery = "SELECT * FROM mydatabase.accident_event";
 	String getTotalEventsQuery = "SELECT COUNT(*) FROM mydatabase.accident_event";
 	String getActiveUsersQuery = "SELECT COUNT(*) FROM mydatabase.user";
@@ -29,8 +29,9 @@ public class DBOperation {
 	String getLastMonthEventsQuery = "SELECT COUNT(*) FROM mydatabase.accident_event WHERE start_time BETWEEN CURDATE()-30 AND CURDATE()+1";
 	String getUserDetailsQuery = "SELECT * FROM mydatabase.user WHERE email=?";
 	String getUserLastEventsQuery = "SELECT * FROM mydatabase.accident_event WHERE user_email=?";
+	String getUserSpecificEventQuery = "SELECT * FROM mydatabase.accident_event WHERE event_id=?";
 	String getSupplierNameQuery = "SELECT * FROM mydatabase.supplier WHERE email=?";
-	String getActiveEventsForSuppliersQuery = "SELECT * FROM mydatabase.accident_event WHERE is_active=1 AND tow_arrived=0";
+	String getActiveEventsForSuppliersQuery = "SELECT * FROM mydatabase.accident_event WHERE is_active=1 AND tow_arrived=0 AND call_tow=1";
 
 
 	/**
@@ -182,8 +183,7 @@ public class DBOperation {
 			Class.forName(DRIVER);
 			java.sql.Connection connection = DriverManager.getConnection(URL, USER, PASSWORD);
 			PreparedStatement ps = connection.prepareStatement(closeEventQuery);
-			ps.setString(1, "0");
-			ps.setString(2, "" + id);
+			ps.setString(1, id);
 			answer = ps.executeUpdate();
 		} catch (Exception e) {
 			e.printStackTrace();
@@ -289,8 +289,36 @@ public class DBOperation {
 			rs.afterLast();
 			while (rs.previous() && num < 3) {
 				jObj.put("id" + num, rs.getInt(1));
-				jObj.put("time" + num, rs.getString(12));
+				jObj.put("is_active" + num, rs.getInt(11));
+				jObj.put("time" + num, rs.getString(13));
 				num++;
+			}
+			return jObj;
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		return null;
+
+	}
+	
+	public JSONObject getUserSpecificEvent(String id) {
+		try {
+			Class.forName(DRIVER);
+			java.sql.Connection connection = DriverManager.getConnection(URL, USER, PASSWORD);
+			PreparedStatement ps = connection.prepareStatement(getUserSpecificEventQuery);
+			ps.setString(1, id);
+			ResultSet rs = ps.executeQuery();
+			JSONObject jObj = new JSONObject();
+			if (rs.next()) {
+				jObj.put("is_police", rs.getInt(3));
+				jObj.put("is_mda", rs.getInt(4));
+				jObj.put("is_fire", rs.getInt(5));
+				jObj.put("is_contact", rs.getInt(6));
+				jObj.put("is_tow", rs.getInt(7));
+				jObj.put("tow_arrived", rs.getInt(10));
+				jObj.put("is_active", rs.getInt(11));
+				jObj.put("waze", rs.getString(12));
+				jObj.put("time", rs.getString(13));
 			}
 			return jObj;
 		} catch (Exception e) {

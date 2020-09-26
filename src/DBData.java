@@ -209,6 +209,18 @@ public class DBData extends HttpServlet {
 				pw.print(answer);
 			}
 		}
+		
+		else if(req.getParameter("operation").equals("getUserSpecificEvent")) {
+			String id = req.getParameter("id");
+			JSONObject jObj = dbOperation.getUserSpecificEvent(id);
+			if (jObj != null) {
+				PrintWriter pw = resp.getWriter();
+				String answer = new String(jObj.toString().getBytes("UTF-8"), "ISO-8859-1");
+				pw.write(answer);
+				pw.print(answer);
+		}
+		}
+			
 	}
 
 }
