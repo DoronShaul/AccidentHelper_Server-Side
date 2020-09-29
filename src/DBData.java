@@ -113,8 +113,9 @@ public class DBData extends HttpServlet {
 		// if the needed operation is to update the accident event.
 		else if (req.getParameter("operation").equals("updateEventStatus")) {
 			String id = "" + req.getParameter("event_id");
+			String email = req.getParameter("email");
 
-			if (dbOperation.updateAccidentEvent(id) > 0) {
+			if (dbOperation.updateAccidentEvent(id, email) > 0) {
 				System.out.println("update event succeed");
 				JSONObject status = new JSONObject();
 				try {
@@ -146,7 +147,7 @@ public class DBData extends HttpServlet {
 				}
 			}
 		}
-		// if the needed operation is to get the last events.
+		// if the needed operation is to get the admin's last events.
 		else if (req.getParameter("operation").equals("getLastEvents")) {
 			JSONObject jObj = dbOperation.getLastEvents();
 			if (jObj != null) {
@@ -156,6 +157,17 @@ public class DBData extends HttpServlet {
 				pw.print(answer);
 			}
 		}
+		// if the needed operation is to get the supplier's last events.
+		else if (req.getParameter("operation").equals("getSupplierLastEvents")) {
+			String email = req.getParameter("email");
+			JSONObject jObj = dbOperation.getSupplierLastEvents(email);
+			if (jObj != null) {
+				PrintWriter pw = resp.getWriter();
+				String answer = new String(jObj.toString().getBytes("UTF-8"), "ISO-8859-1");
+				pw.write(answer);
+				pw.print(answer);
+			}
+		}		
 		// if the needed operation is to get the admin statistics.
 		else if (req.getParameter("operation").equals("getAdminStatistics")) {
 			JSONObject jObj = dbOperation.getAdminStatistics();
