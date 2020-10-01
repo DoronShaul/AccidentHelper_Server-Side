@@ -24,15 +24,19 @@ public class DBOperation {
 	String getLastEventsQuery = "SELECT * FROM mydatabase.accident_event";
 	String getSupplierLastEventsQuery = "SELECT * FROM mydatabase.accident_event WHERE service_provider=?";
 	String getTotalEventsQuery = "SELECT COUNT(*) FROM mydatabase.accident_event";
+	String getSupplierTotalEventsQuery = "SELECT COUNT(*) FROM mydatabase.accident_event WHERE service_provider=?";
 	String getActiveUsersQuery = "SELECT COUNT(*) FROM mydatabase.user";
 	String getTotalSuppliersQuery = "SELECT COUNT(*) FROM mydatabase.supplier";
-	String getLastDayEventsQuery = "SELECT COUNT(*) FROM mydatabase.accident_event WHERE start_time BETWEEN CURDATE() AND CURDATE()+1";
-	String getLastMonthEventsQuery = "SELECT COUNT(*) FROM mydatabase.accident_event WHERE start_time BETWEEN CURDATE()-30 AND CURDATE()+1";
+	String getLastDayEventsQuery = "SELECT COUNT(*) FROM mydatabase.accident_event WHERE start_time > date_sub(now(), interval 1 day)";
+	String getSupplierLastDayEventsQuery = "SELECT COUNT(*) FROM mydatabase.accident_event WHERE service_provider=? AND start_time > date_sub(now(), interval 1 day)";
+	String getLastMonthEventsQuery = "SELECT COUNT(*) FROM mydatabase.accident_event WHERE start_time > date_sub(now(), interval 1 month)";
+	String getSupplierLastMonthEventsQuery = "SELECT COUNT(*) FROM mydatabase.accident_event WHERE service_provider=? AND start_time > date_sub(now(), interval 1 month)";
 	String getUserDetailsQuery = "SELECT * FROM mydatabase.user WHERE email=?";
 	String getUserLastEventsQuery = "SELECT * FROM mydatabase.accident_event WHERE user_email=?";
 	String getUserSpecificEventQuery = "SELECT * FROM mydatabase.accident_event WHERE event_id=?";
 	String getSupplierNameQuery = "SELECT * FROM mydatabase.supplier WHERE email=?";
 	String getActiveEventsForSuppliersQuery = "SELECT * FROM mydatabase.accident_event WHERE is_active=1 AND tow_arrived=0 AND call_tow=1";
+	String getUserContactsQuery = "SELECT * FROM mydatabase.contact WHERE user_email=?";
 
 
 	/**
@@ -284,6 +288,40 @@ public class DBOperation {
 
 	}
 	
+	public JSONObject getSupplierStatistics(String email) {
+		try {
+			Class.forName(DRIVER);
+			java.sql.Connection connection = DriverManager.getConnection(URL, USER, PASSWORD);
+			PreparedStatement psLastDay = connection.prepareStatement(getSupplierLastDayEventsQuery);
+			PreparedStatement psTotalEvents = connection.prepareStatement(getSupplierTotalEventsQuery);
+			PreparedStatement psLastMonth = connection.prepareStatement(getSupplierLastMonthEventsQuery);
+			int lastDay, lastMonth, totalEvents;
+			psLastDay.setString(1, email);
+			psTotalEvents.setString(1, email);
+			psLastMonth.setString(1, email);
+			ResultSet rs;
+			rs = psLastDay.executeQuery();
+			rs.next();
+			lastDay = rs.getInt(1);
+			rs = psLastMonth.executeQuery();
+			rs.next();
+			lastMonth = rs.getInt(1);
+			rs = psTotalEvents.executeQuery();
+			rs.next();
+			totalEvents = rs.getInt(1);
+			JSONObject jObj = new JSONObject();
+			jObj.put("totalEvents", totalEvents);
+			jObj.put("lastDayEvents", lastDay);
+			jObj.put("lastMonthEvents", lastMonth);
+
+			return jObj;
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		return null;
+
+	}
+	
 	public JSONObject getUserName(String email) {
 		try {
 			Class.forName(DRIVER);
@@ -294,6 +332,61 @@ public class DBOperation {
 			JSONObject jObj = new JSONObject();
 			if (rs.next()) {
 				jObj.put("userName", rs.getNString(2));
+			}
+			return jObj;
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		return null;
+
+	}
+	
+	public JSONObject getUserContacts(String email) {
+		try {
+			Class.forName(DRIVER);
+			java.sql.Connection connection = DriverManager.getConnection(URL, USER, PASSWORD);
+			PreparedStatement ps = connection.prepareStatement(getUserContactsQuery);
+			ps.setString(1, email);
+			ResultSet rs = ps.executeQuery();
+			JSONObject jObj = new JSONObject();
+			int num = 0;
+			while (rs.next()) {
+				jObj.put("phone"+num, rs.getNString(4));
+				num++;
+			}
+			return jObj;
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		return null;
+
+	}
+	
+	public JSONObject getUserDetails(String email) {
+		try {
+			Class.forName(DRIVER);
+			java.sql.Connection connection = DriverManager.getConnection(URL, USER, PASSWORD);
+			PreparedStatement ps = connection.prepareStatement(getUserDetailsQuery);
+			PreparedStatement ps1 = connection.prepareStatement(getUserContactsQuery);
+			ps.setString(1, email);
+			ps1.setString(1, email);
+			ResultSet rs = ps1.executeQuery();
+			ResultSet rs1 = ps.executeQuery();
+			JSONObject jObj = new JSONObject();
+			int num = 0;
+			while (rs.next()) {
+				jObj.put("contactName"+num, rs.getNString(3));
+				jObj.put("contactPhone"+num, rs.getNString(4));
+				num++;
+			}
+			if(rs1.next()) {
+				jObj.put("name", rs1.getNString(2));
+				jObj.put("id", rs1.getInt(3));
+				jObj.put("phone", rs1.getNString(5));
+				jObj.put("insurance", rs1.getNString(6));
+				jObj.put("carNum", rs1.getNString(7));
+				jObj.put("carCompany", rs1.getNString(8));
+				
 			}
 			return jObj;
 		} catch (Exception e) {

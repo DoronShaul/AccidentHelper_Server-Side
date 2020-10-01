@@ -178,10 +178,40 @@ public class DBData extends HttpServlet {
 				pw.print(answer);
 			}
 		}
+		else if (req.getParameter("operation").equals("getSupplierStatistics")) {
+			String email = req.getParameter("email");
+			JSONObject jObj = dbOperation.getSupplierStatistics(email);
+			if (jObj != null) {
+				PrintWriter pw = resp.getWriter();
+				String answer = new String(jObj.toString().getBytes("UTF-8"), "ISO-8859-1");
+				pw.write(answer);
+				pw.print(answer);
+			}
+		}
 		// if the needed operation is to get the user name.
 		else if (req.getParameter("operation").equals("getUserName")) {
 			String email = req.getParameter("email");
 			JSONObject jObj = dbOperation.getUserName(email);
+			if (jObj != null) {
+				PrintWriter pw = resp.getWriter();
+				String answer = new String(jObj.toString().getBytes("UTF-8"), "ISO-8859-1");
+				pw.write(answer);
+				pw.print(answer);
+			}
+		}
+		else if (req.getParameter("operation").equals("getUserContacts")) {
+			String email = req.getParameter("email");
+			JSONObject jObj = dbOperation.getUserContacts(email);
+			if (jObj != null) {
+				PrintWriter pw = resp.getWriter();
+				String answer = new String(jObj.toString().getBytes("UTF-8"), "ISO-8859-1");
+				pw.write(answer);
+				pw.print(answer);
+			}
+		}
+		else if (req.getParameter("operation").equals("getUserDetails")) {
+			String email = req.getParameter("email");
+			JSONObject jObj = dbOperation.getUserDetails(email);
 			if (jObj != null) {
 				PrintWriter pw = resp.getWriter();
 				String answer = new String(jObj.toString().getBytes("UTF-8"), "ISO-8859-1");
