@@ -260,7 +260,37 @@ public class DBData extends HttpServlet {
 				String answer = new String(jObj.toString().getBytes("UTF-8"), "ISO-8859-1");
 				pw.write(answer);
 				pw.print(answer);
+			}
 		}
+		
+		else if(req.getParameter("operation").equals("checkForUser")) {
+			String email = req.getParameter("email");
+			JSONObject jObj = dbOperation.checkForUser(email);
+			if (jObj != null) {
+				PrintWriter pw = resp.getWriter();
+				String answer = new String(jObj.toString().getBytes("UTF-8"), "ISO-8859-1");
+				pw.write(answer);
+				pw.print(answer);
+			}
+		}
+		
+		else if(req.getParameter("operation").equals("updateUserPassword")) {
+			String email = req.getParameter("email");
+			String password = req.getParameter("password");
+			String hashedPassword = BCrypt.hashpw(password, BCrypt.gensalt());
+			if (dbOperation.updateUserPassword(email, hashedPassword) > 0) {
+				System.out.println("update user password succeed");
+				JSONObject status = new JSONObject();
+				try {
+					status.put("status", "succeed");
+					PrintWriter pw = resp.getWriter();
+					pw.write(status.toString());
+					pw.print(status.toString());
+
+				} catch (JSONException e) {
+					e.printStackTrace();
+				}
+			}
 		}
 			
 	}

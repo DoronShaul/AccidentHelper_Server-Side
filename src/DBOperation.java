@@ -10,7 +10,7 @@ import javafx.util.Pair;
 
 public class DBOperation {
 	String DRIVER = "com.mysql.cj.jdbc.Driver";
-	String URL = "jdbc:mysql://localhost:3306/mydatabase?useUnicode=true&useJDBCCompliantTimezoneShift=true&useLegacyDatetimeCode=false&serverTimezone=UTC";
+	String URL = "jdbc:mysql://localhost:3306/mydatabase?useUnicode=true&useJDBCCompliantTimezoneShift=true&useLegacyDatetimeCode=false&serverTimezone=UTC";			
 	String USER = "root";
 	String PASSWORD = "root";
 	String getWaitingListQuery = "SELECT * FROM mydatabase.waiting_supplier";
@@ -21,11 +21,13 @@ public class DBOperation {
 	String lastIdQuery = "SELECT LAST_INSERT_ID()";
 	String updateEventQuery = "UPDATE mydatabase.accident_event SET tow_arrived=1, service_provider=? WHERE event_id=?";
 	String closeEventQuery = "UPDATE mydatabase.accident_event SET is_active=0, end_time=current_timestamp() WHERE event_id=?";
+	String updateUserPasswordQuery = "UPDATE mydatabase.user SET pass=? WHERE email=?";
 	String getLastEventsQuery = "SELECT * FROM mydatabase.accident_event";
 	String getSupplierLastEventsQuery = "SELECT * FROM mydatabase.accident_event WHERE service_provider=?";
 	String getTotalEventsQuery = "SELECT COUNT(*) FROM mydatabase.accident_event";
 	String getSupplierTotalEventsQuery = "SELECT COUNT(*) FROM mydatabase.accident_event WHERE service_provider=?";
 	String getActiveUsersQuery = "SELECT COUNT(*) FROM mydatabase.user";
+	String checkForUserQuery = "SELECT * FROM mydatabase.user WHERE email=?";
 	String getTotalSuppliersQuery = "SELECT COUNT(*) FROM mydatabase.supplier";
 	String getLastDayEventsQuery = "SELECT COUNT(*) FROM mydatabase.accident_event WHERE start_time > date_sub(now(), interval 1 day)";
 	String getSupplierLastDayEventsQuery = "SELECT COUNT(*) FROM mydatabase.accident_event WHERE service_provider=? AND start_time > date_sub(now(), interval 1 day)";
@@ -220,7 +222,7 @@ public class DBOperation {
 		return null;
 
 	}
-	
+
 	public JSONObject getSupplierLastEvents(String email) {
 		try {
 			Class.forName(DRIVER);
@@ -271,7 +273,7 @@ public class DBOperation {
 			rs.next();
 			totalSuppliers = rs.getInt(1);
 			totalUsers = activeUsers + totalSuppliers;
-			
+
 			JSONObject jObj = new JSONObject();
 			jObj.put("totalSupplier", totalSuppliers);
 			jObj.put("totalEvents", totalEvents);
@@ -287,7 +289,7 @@ public class DBOperation {
 		return null;
 
 	}
-	
+
 	public JSONObject getSupplierStatistics(String email) {
 		try {
 			Class.forName(DRIVER);
@@ -321,7 +323,7 @@ public class DBOperation {
 		return null;
 
 	}
-	
+
 	public JSONObject getUserName(String email) {
 		try {
 			Class.forName(DRIVER);
@@ -340,7 +342,7 @@ public class DBOperation {
 		return null;
 
 	}
-	
+
 	public JSONObject getUserContacts(String email) {
 		try {
 			Class.forName(DRIVER);
@@ -361,7 +363,7 @@ public class DBOperation {
 		return null;
 
 	}
-	
+
 	public JSONObject getUserDetails(String email) {
 		try {
 			Class.forName(DRIVER);
@@ -386,7 +388,7 @@ public class DBOperation {
 				jObj.put("insurance", rs1.getNString(6));
 				jObj.put("carNum", rs1.getNString(7));
 				jObj.put("carCompany", rs1.getNString(8));
-				
+
 			}
 			return jObj;
 		} catch (Exception e) {
@@ -395,7 +397,7 @@ public class DBOperation {
 		return null;
 
 	}
-	
+
 	public JSONObject getUserLastEvents(String email) {
 		try {
 			Class.forName(DRIVER);
@@ -419,7 +421,7 @@ public class DBOperation {
 		return null;
 
 	}
-	
+
 	public JSONObject getUserSpecificEvent(String id) {
 		try {
 			Class.forName(DRIVER);
@@ -446,7 +448,7 @@ public class DBOperation {
 		return null;
 
 	}
-	
+
 	public JSONObject getSupplierName(String email) {
 		try {
 			Class.forName(DRIVER);
@@ -465,7 +467,44 @@ public class DBOperation {
 		return null;
 
 	}
-	
+
+	public JSONObject checkForUser(String email) {
+		try {
+			Class.forName(DRIVER);
+			java.sql.Connection connection = DriverManager.getConnection(URL, USER, PASSWORD);
+			PreparedStatement ps = connection.prepareStatement(checkForUserQuery);
+			ps.setString(1, email);
+			ResultSet rs = ps.executeQuery();
+			JSONObject jObj = new JSONObject();
+			if (rs.next()) {
+				jObj.put("answer", "exist");
+			} else {
+				jObj.put("answer", "doesn't exist");
+			}
+			return jObj;
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		return null;
+
+	}
+
+	public int updateUserPassword(String email, String password) {
+		int answer = 0;
+		try {
+			Class.forName(DRIVER);
+			java.sql.Connection connection = DriverManager.getConnection(URL, USER, PASSWORD);
+			PreparedStatement ps = connection.prepareStatement(updateUserPasswordQuery);
+			ps.setString(1, password);
+			ps.setString(2, email);
+			answer = ps.executeUpdate();
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		return answer;
+
+	}
+
 	public JSONObject getActiveEventsForSuppliers() {
 		try {
 			Class.forName(DRIVER);
