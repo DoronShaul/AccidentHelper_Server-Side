@@ -241,7 +241,7 @@ public class DBData extends HttpServlet {
 				pw.print(answer);
 			}
 		}
-		
+
 		else if (req.getParameter("operation").equals("getActiveEventsForSuppliers")) {
 			JSONObject jObj = dbOperation.getActiveEventsForSuppliers();
 			if (jObj != null) {
@@ -251,7 +251,7 @@ public class DBData extends HttpServlet {
 				pw.print(answer);
 			}
 		}
-		
+
 		else if(req.getParameter("operation").equals("getUserSpecificEvent")) {
 			String id = req.getParameter("id");
 			JSONObject jObj = dbOperation.getUserSpecificEvent(id);
@@ -262,7 +262,7 @@ public class DBData extends HttpServlet {
 				pw.print(answer);
 			}
 		}
-		
+
 		else if(req.getParameter("operation").equals("checkForUser")) {
 			String email = req.getParameter("email");
 			JSONObject jObj = dbOperation.checkForUser(email);
@@ -273,7 +273,7 @@ public class DBData extends HttpServlet {
 				pw.print(answer);
 			}
 		}
-		
+
 		else if(req.getParameter("operation").equals("updateUserPassword")) {
 			String email = req.getParameter("email");
 			String password = req.getParameter("password");
@@ -292,7 +292,40 @@ public class DBData extends HttpServlet {
 				}
 			}
 		}
-			
+
+		else if(req.getParameter("operation").equals("updateUserDetails")) {
+			String email = req.getParameter("email");
+			String password = req.getParameter("password");
+			String name = req.getParameter("name");
+			String phone = req.getParameter("phone");
+			String insuranceCompany = req.getParameter("insurance");
+			String carCompany = req.getParameter("carCompany");
+			String carNum = req.getParameter("carNum");
+			String contact1Name = req.getParameter("contact1Name");
+			String contact1Num = req.getParameter("contact1Num");
+			String contact2Name = req.getParameter("contact2Name");
+			String contact2Num = req.getParameter("contact2Num");
+			if(req.getParameter("hasPasswordChanged").equals("yes")) {
+				String hashedPassword = BCrypt.hashpw(password, BCrypt.gensalt());
+				dbOperation.updateUserPassword(email, hashedPassword);
+			}
+			if(dbOperation.updateUserDetails(email, name, phone, insuranceCompany, carCompany, carNum)>0) {
+				//dbOperation.updateUserContacts(email, contact1Name, contact1Num, contact2Name, contact2Num);
+				//System.out.println("update user password succeed");
+				JSONObject status = new JSONObject();
+				try {
+					status.put("status", "succeed");
+					PrintWriter pw = resp.getWriter();
+					pw.write(status.toString());
+					pw.print(status.toString());
+
+				} catch (JSONException e) {
+					e.printStackTrace();
+				}
+			}
+
+		}
+
 	}
 
 }

@@ -22,9 +22,11 @@ public class DBOperation {
 	String updateEventQuery = "UPDATE mydatabase.accident_event SET tow_arrived=1, service_provider=? WHERE event_id=?";
 	String closeEventQuery = "UPDATE mydatabase.accident_event SET is_active=0, end_time=current_timestamp() WHERE event_id=?";
 	String updateUserPasswordQuery = "UPDATE mydatabase.user SET pass=? WHERE email=?";
+	String updateUserDetailsQuery = "UPDATE mydatabase.user SET user_full_name=?, phone=?, insurance_company=?, car_number=?, car_company=? WHERE email=?";
 	String getLastEventsQuery = "SELECT * FROM mydatabase.accident_event";
 	String getSupplierLastEventsQuery = "SELECT * FROM mydatabase.accident_event WHERE service_provider=?";
 	String getTotalEventsQuery = "SELECT COUNT(*) FROM mydatabase.accident_event";
+	String checkUserContactsQuery = "SELECT COUNT(*) FROM mydatabase.contact WHERE user_email=?";
 	String getSupplierTotalEventsQuery = "SELECT COUNT(*) FROM mydatabase.accident_event WHERE service_provider=?";
 	String getActiveUsersQuery = "SELECT COUNT(*) FROM mydatabase.user";
 	String checkForUserQuery = "SELECT * FROM mydatabase.user WHERE email=?";
@@ -497,6 +499,41 @@ public class DBOperation {
 			PreparedStatement ps = connection.prepareStatement(updateUserPasswordQuery);
 			ps.setString(1, password);
 			ps.setString(2, email);
+			answer = ps.executeUpdate();
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		return answer;
+
+	}
+	
+	public int updateUserDetails(String email, String name, String phone, String insurance, String carCompany, String carNum) {
+		int answer = 0;
+		try {
+			Class.forName(DRIVER);
+			java.sql.Connection connection = DriverManager.getConnection(URL, USER, PASSWORD);
+			PreparedStatement ps = connection.prepareStatement(updateUserDetailsQuery);
+			ps.setString(1, name);
+			ps.setString(2, phone);
+			ps.setString(3, insurance);
+			ps.setString(4, carNum);
+			ps.setString(5, carCompany);
+			ps.setString(6, email);
+			answer = ps.executeUpdate();
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		return answer;
+
+	}
+	
+	public int updateUserContacts(String email, String contact1Name, String contact1Num, String contact2Name, String contact2Num) {
+		int answer = 0;
+		try {
+			Class.forName(DRIVER);
+			java.sql.Connection connection = DriverManager.getConnection(URL, USER, PASSWORD);
+			PreparedStatement ps = connection.prepareStatement(checkUserContactsQuery);
+			ps.setString(1, email);
 			answer = ps.executeUpdate();
 		} catch (Exception e) {
 			e.printStackTrace();
