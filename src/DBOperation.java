@@ -171,6 +171,12 @@ public class DBOperation {
 		return pair;
 	}
 
+	/**
+	 * this method updates the event service's provider.
+	 * @param id
+	 * @param email
+	 * @return
+	 */
 	public int updateAccidentEvent(String id, String email) {
 		int answer = 0;
 		try {
@@ -187,6 +193,11 @@ public class DBOperation {
 		return answer;
 	}
 
+	/**
+	 * this method closes the event by changing the is_active variable to 0.
+	 * @param id
+	 * @return
+	 */
 	public int closeAccidentEvent(String id) {
 		int answer = 0;
 		try {
@@ -202,6 +213,10 @@ public class DBOperation {
 		return answer;
 	}
 
+	/**
+	 * this method gets the last three events.
+	 * @return
+	 */
 	public JSONObject getLastEvents() {
 		try {
 			Class.forName(DRIVER);
@@ -225,6 +240,11 @@ public class DBOperation {
 
 	}
 
+	/**
+	 * this method gets the last three events for the given supplier.
+	 * @param email
+	 * @return
+	 */
 	public JSONObject getSupplierLastEvents(String email) {
 		try {
 			Class.forName(DRIVER);
@@ -249,6 +269,10 @@ public class DBOperation {
 
 	}
 
+	/**
+	 * this method gets all the admin's statistics.
+	 * @return
+	 */
 	public JSONObject getAdminStatistics() {
 		try {
 			Class.forName(DRIVER);
@@ -292,6 +316,11 @@ public class DBOperation {
 
 	}
 
+	/**
+	 * this method gets all the supplier's statistics.
+	 * @param email
+	 * @return
+	 */
 	public JSONObject getSupplierStatistics(String email) {
 		try {
 			Class.forName(DRIVER);
@@ -326,6 +355,11 @@ public class DBOperation {
 
 	}
 
+	/**
+	 * this method returns the user name according to the given email.
+	 * @param email
+	 * @return
+	 */
 	public JSONObject getUserName(String email) {
 		try {
 			Class.forName(DRIVER);
@@ -345,6 +379,11 @@ public class DBOperation {
 
 	}
 
+	/**
+	 * this method returns a specific user's contacts.
+	 * @param email
+	 * @return
+	 */
 	public JSONObject getUserContacts(String email) {
 		try {
 			Class.forName(DRIVER);
@@ -366,6 +405,11 @@ public class DBOperation {
 
 	}
 
+	/**
+	 * this method returns all the details of a specific user.
+	 * @param email
+	 * @return
+	 */
 	public JSONObject getUserDetails(String email) {
 		try {
 			Class.forName(DRIVER);
@@ -400,6 +444,11 @@ public class DBOperation {
 
 	}
 
+	/**
+	 * this method returns a specific user's last three events.
+	 * @param email
+	 * @return
+	 */
 	public JSONObject getUserLastEvents(String email) {
 		try {
 			Class.forName(DRIVER);
@@ -424,6 +473,11 @@ public class DBOperation {
 
 	}
 
+	/**
+	 * this method returns a specific user event.
+	 * @param id
+	 * @return
+	 */
 	public JSONObject getUserSpecificEvent(String id) {
 		try {
 			Class.forName(DRIVER);
@@ -451,6 +505,11 @@ public class DBOperation {
 
 	}
 
+	/**
+	 * this method returns the name of a specific supplier.
+	 * @param email
+	 * @return
+	 */
 	public JSONObject getSupplierName(String email) {
 		try {
 			Class.forName(DRIVER);
@@ -470,6 +529,11 @@ public class DBOperation {
 
 	}
 
+	/**
+	 * this method checks if a specific user is already exist in the database.
+	 * @param email
+	 * @return
+	 */
 	public JSONObject checkForUser(String email) {
 		try {
 			Class.forName(DRIVER);
@@ -491,6 +555,12 @@ public class DBOperation {
 
 	}
 
+	/**
+	 * this method updates the user's password.
+	 * @param email
+	 * @param password
+	 * @return
+	 */
 	public int updateUserPassword(String email, String password) {
 		int answer = 0;
 		try {
@@ -506,7 +576,17 @@ public class DBOperation {
 		return answer;
 
 	}
-	
+
+	/**
+	 * this method updates a specific user's details.
+	 * @param email
+	 * @param name
+	 * @param phone
+	 * @param insurance
+	 * @param carCompany
+	 * @param carNum
+	 * @return
+	 */
 	public int updateUserDetails(String email, String name, String phone, String insurance, String carCompany, String carNum) {
 		int answer = 0;
 		try {
@@ -527,6 +607,15 @@ public class DBOperation {
 
 	}
 	
+	/**
+	 * this method updates the user's contacts.
+	 * @param email
+	 * @param contact1Name
+	 * @param contact1Num
+	 * @param contact2Name
+	 * @param contact2Num
+	 * @return
+	 */
 	public int updateUserContacts(String email, String contact1Name, String contact1Num, String contact2Name, String contact2Num) {
 		int answer = 0;
 		try {
@@ -542,6 +631,10 @@ public class DBOperation {
 
 	}
 
+	/**
+	 * this method returns the current active events.
+	 * @return
+	 */
 	public JSONObject getActiveEventsForSuppliers() {
 		try {
 			Class.forName(DRIVER);

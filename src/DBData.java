@@ -178,6 +178,7 @@ public class DBData extends HttpServlet {
 				pw.print(answer);
 			}
 		}
+		// if the needed operation is to get the supplier statistics.
 		else if (req.getParameter("operation").equals("getSupplierStatistics")) {
 			String email = req.getParameter("email");
 			JSONObject jObj = dbOperation.getSupplierStatistics(email);
@@ -199,6 +200,7 @@ public class DBData extends HttpServlet {
 				pw.print(answer);
 			}
 		}
+		// if the needed operation is to get the user contacts.
 		else if (req.getParameter("operation").equals("getUserContacts")) {
 			String email = req.getParameter("email");
 			JSONObject jObj = dbOperation.getUserContacts(email);
@@ -209,6 +211,7 @@ public class DBData extends HttpServlet {
 				pw.print(answer);
 			}
 		}
+		//if the needed operation is to get the user details.
 		else if (req.getParameter("operation").equals("getUserDetails")) {
 			String email = req.getParameter("email");
 			JSONObject jObj = dbOperation.getUserDetails(email);
@@ -241,7 +244,7 @@ public class DBData extends HttpServlet {
 				pw.print(answer);
 			}
 		}
-
+		//if the needed operation is to get the active events of all users.
 		else if (req.getParameter("operation").equals("getActiveEventsForSuppliers")) {
 			JSONObject jObj = dbOperation.getActiveEventsForSuppliers();
 			if (jObj != null) {
@@ -251,7 +254,7 @@ public class DBData extends HttpServlet {
 				pw.print(answer);
 			}
 		}
-
+		//if the needed operation is to get a specific event.
 		else if(req.getParameter("operation").equals("getUserSpecificEvent")) {
 			String id = req.getParameter("id");
 			JSONObject jObj = dbOperation.getUserSpecificEvent(id);
@@ -262,7 +265,7 @@ public class DBData extends HttpServlet {
 				pw.print(answer);
 			}
 		}
-
+		//if the needed operation is to check if a user exists in the database.
 		else if(req.getParameter("operation").equals("checkForUser")) {
 			String email = req.getParameter("email");
 			JSONObject jObj = dbOperation.checkForUser(email);
@@ -273,7 +276,7 @@ public class DBData extends HttpServlet {
 				pw.print(answer);
 			}
 		}
-
+		//if the needed operation is to update the user password.
 		else if(req.getParameter("operation").equals("updateUserPassword")) {
 			String email = req.getParameter("email");
 			String password = req.getParameter("password");
@@ -292,7 +295,7 @@ public class DBData extends HttpServlet {
 				}
 			}
 		}
-
+		//if the needed operation is to update the user details.
 		else if(req.getParameter("operation").equals("updateUserDetails")) {
 			String email = req.getParameter("email");
 			String password = req.getParameter("password");
